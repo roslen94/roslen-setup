@@ -1,0 +1,8 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/latest-videos"
+  to = "/.netlify/functions/latest-videos"
+  status = 200
