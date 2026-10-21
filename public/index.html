@@ -292,26 +292,6 @@ footer{border-top:1px solid var(--line);color:#8a7a6d;padding:27px 0 36px;font-s
 @media(max-width:560px){.analytics-consent{inset:auto 9px 9px 9px;width:auto;border-radius:15px;padding:15px}.analytics-consent h2{font-size:17px}.analytics-consent-actions{gap:6px}.analytics-consent-action{min-height:46px}}
 
 
-/* ROSLEN | Amazon mobile-choice bottom sheet (only presented after a visitor taps an affiliate link on mobile). */
-.roslen-amazon-modal[hidden]{display:none!important}
-.roslen-amazon-modal{position:fixed;inset:0;z-index:3000;display:flex;justify-content:center;align-items:flex-end;padding:14px;background:rgba(23,18,13,.52);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
-.roslen-amazon-panel{width:min(100%,440px);background:#fffdfa;border:1px solid #ffd9ba;border-radius:20px;padding:25px 22px 21px;position:relative;box-shadow:0 24px 70px rgba(35,20,7,.28);color:#1b1713;animation:roslen-amazon-rise .22s ease both}
-.roslen-amazon-panel .roslen-amazon-eyebrow{font-size:10px;letter-spacing:.15em;color:#dc651a;text-transform:uppercase;font-weight:900;margin:0 0 7px}
-.roslen-amazon-panel h2{font-weight:850;font-size:22px;letter-spacing:-.045em;margin:0 34px 10px 0;line-height:1.15}
-.roslen-amazon-panel p{font-size:13px;line-height:1.6;color:#7d6553;margin:0 0 20px}
-.roslen-amazon-actions{display:flex;flex-direction:column;gap:10px}
-.roslen-amazon-actions a{display:flex;justify-content:center;align-items:center;min-height:48px;padding:10px 14px;border-radius:11px;text-decoration:none;font-weight:800;font-size:13px;transition:background .2s ease}
-.roslen-amazon-actions .roslen-amazon-primary{color:#fff;background:#ff7821}
-.roslen-amazon-actions .roslen-amazon-primary:hover{background:#dc5f11}
-.roslen-amazon-actions .roslen-amazon-secondary{color:#a24d19;background:#fff6ee;border:1px solid #ffdfc7}
-.roslen-amazon-actions .roslen-amazon-secondary:hover{background:#ffecdc}
-.roslen-amazon-close{position:absolute;right:18px;top:18px;border:0;background:#fff0e5;border-radius:100%;width:31px;height:31px;cursor:pointer;color:#8e4a24;font-size:18px;line-height:1}
-.roslen-amazon-close:focus-visible,.roslen-amazon-actions a:focus-visible{outline:3px solid #ff9e58;outline-offset:3px}
-.roslen-amazon-modal .roslen-amazon-hint{font-size:10px;margin:12px 0 0;color:#9e8170;text-align:center}
-body.roslen-amazon-modal-open{overflow:hidden}
-@keyframes roslen-amazon-rise{from{transform:translateY(24px);opacity:.3}to{transform:translateY(0);opacity:1}}
-@media(min-width:769px){.roslen-amazon-modal{align-items:center}}
-@media(prefers-reduced-motion:reduce){.roslen-amazon-panel{animation:none}}
 
 </style></head>
 <body>
@@ -453,21 +433,6 @@ body.roslen-amazon-modal-open{overflow:hidden}
 </main>
 <footer><div class="wrap footerwrap"><span data-i18n="footerDisclaimer">© 2026 ROSLEN. Site démo · Certains liens sont affiliés. En tant que Partenaire Amazon, je réalise un bénéfice sur les achats remplissant les conditions requises.</span><div class="footlinks"><a href="https://x.com/RoslenVLR" rel="noopener" target="_blank">X / Twitter</a><a href="mailto:pro.roslen@gmail.com">Contact</a><button id="analyticsManage" class="analytics-consent-manage" type="button">Gérer les cookies</button><a data-i18n="backTop" href="#home">↑ Retour en haut</a></div></div></footer>
 <div aria-live="polite" class="toast" id="toast" role="status">Copié !</div>
-
-<!-- On small-screen phones: offer the Amazon app while keeping the original affiliate link intact. -->
-<div id="roslenAmazonModal" class="roslen-amazon-modal" role="presentation" hidden>
-  <section class="roslen-amazon-panel" role="dialog" aria-modal="true" aria-labelledby="roslenAmazonTitle" aria-describedby="roslenAmazonDescription">
-    <button id="roslenAmazonClose" class="roslen-amazon-close" type="button" aria-label="Fermer">×</button>
-    <div id="roslenAmazonEyebrow" class="roslen-amazon-eyebrow">MON SETUP / AMAZON</div>
-    <h2 id="roslenAmazonTitle">Ouvrir dans l’application Amazon ?</h2>
-    <p id="roslenAmazonDescription">Si l’application Amazon est installée et que ton téléphone le permet, le lien pourra s’y ouvrir. Sinon, il s’ouvrira dans le navigateur.</p>
-    <div class="roslen-amazon-actions">
-      <a id="roslenAmazonApp" class="roslen-amazon-primary" href="#" rel="noopener noreferrer sponsored">Essayer l’application Amazon ↗</a>
-      <a id="roslenAmazonBrowser" class="roslen-amazon-secondary" href="#" target="_blank" rel="noopener noreferrer sponsored">Ouvrir le lien dans un nouvel onglet ↗</a>
-    </div>
-    <p id="roslenAmazonHint" class="roslen-amazon-hint">L’ouverture dans l’application dépend de ton téléphone. Les deux boutons gardent mon lien Amazon affilié.</p>
-  </section>
-</div>
 
 <script id="roslen-i18n">(() => {
   'use strict';
@@ -775,8 +740,6 @@ body.roslen-amazon-modal-open{overflow:hidden}
       transport_type: 'beacon'
     });
   }
-  // The mobile choice sheet calls this only when the visitor actually follows Amazon.
-  window.roslenTrackAffiliate = trackAffiliateClick;
   document.querySelectorAll('a.product-link[data-analytics-product]').forEach(link => {
     link.addEventListener('click', () => trackAffiliateClick(link));
   });
@@ -785,102 +748,6 @@ body.roslen-amazon-modal-open{overflow:hidden}
   if (status === 'yes') activateGoogle();
 })();</script>
 
-
-<script id="roslen-amazon-mobile-choice">(() => {
-  'use strict';
-  const modal = document.getElementById('roslenAmazonModal');
-  const closeButton = document.getElementById('roslenAmazonClose');
-  const appButton = document.getElementById('roslenAmazonApp');
-  const browserButton = document.getElementById('roslenAmazonBrowser');
-  const title = document.getElementById('roslenAmazonTitle');
-  const description = document.getElementById('roslenAmazonDescription');
-  const hint = document.getElementById('roslenAmazonHint');
-  const eyebrow = document.getElementById('roslenAmazonEyebrow');
-  if (!modal || !closeButton || !appButton || !browserButton) return;
-
-  let productLink = null;
-  const mobileWidth = window.matchMedia('(max-width: 768px)');
-  const labels = {
-    fr: {
-      eyebrow: 'MON SETUP / AMAZON',
-      title: 'Ouvrir dans l’application Amazon ?',
-      description: 'Si l’application Amazon est installée et que ton téléphone le permet, le lien pourra s’y ouvrir. Sinon, il s’ouvrira dans le navigateur.',
-      app: 'Essayer l’application Amazon ↗',
-      web: 'Ouvrir le lien dans un nouvel onglet ↗',
-      hint: 'L’ouverture dans l’application dépend de ton téléphone. Les deux boutons gardent mon lien Amazon affilié.',
-      close: 'Fermer'
-    },
-    en: {
-      eyebrow: 'MY SETUP / AMAZON',
-      title: 'Open in the Amazon app?',
-      description: 'If the Amazon app is installed and your phone supports it, the link may open in the app. Otherwise, it will open in your browser.',
-      app: 'Try the Amazon app ↗',
-      web: 'Open the link in a new tab ↗',
-      hint: 'Opening the app depends on your phone. Both options keep the original Amazon affiliate link.',
-      close: 'Close'
-    }
-  };
-  function updateText() {
-    const lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
-    const t = labels[lang];
-    eyebrow.textContent = t.eyebrow;
-    title.textContent = t.title;
-    description.textContent = t.description;
-    appButton.textContent = t.app;
-    browserButton.textContent = t.web;
-    hint.textContent = t.hint;
-    closeButton.setAttribute('aria-label', t.close);
-  }
-  function show(link) {
-    productLink = link;
-    // Do not transform shortened affiliate URLs: the original URL is used for both routes.
-    appButton.href = link.href;
-    browserButton.href = link.href;
-    updateText();
-    modal.hidden = false;
-    document.body.classList.add('roslen-amazon-modal-open');
-    closeButton.focus();
-  }
-  function close() {
-    modal.hidden = true;
-    document.body.classList.remove('roslen-amazon-modal-open');
-    if (productLink) productLink.focus({preventScroll:true});
-    productLink = null;
-  }
-  document.addEventListener('click', (event) => {
-    if (!mobileWidth.matches || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const target = event.target;
-    const anchor = target instanceof Element ? target.closest('a.product-link[data-analytics-product]') : null;
-    if (!anchor || !anchor.href || modal.contains(anchor)) return;
-    // Intercept before GA's normal link handler: a canceled prompt must not count as a click to Amazon.
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    show(anchor);
-  }, true);
-  function outbound() {
-    if (productLink && typeof window.roslenTrackAffiliate === 'function') window.roslenTrackAffiliate(productLink);
-  }
-  appButton.addEventListener('click', outbound);
-  browserButton.addEventListener('click', () => {
-    outbound();
-    modal.hidden = true;
-    document.body.classList.remove('roslen-amazon-modal-open');
-    productLink = null;
-  });
-  closeButton.addEventListener('click', close);
-  modal.addEventListener('click', (event) => { if (event.target === modal) close(); });
-  document.addEventListener('keydown', (event) => {
-    if (modal.hidden) return;
-    if (event.key === 'Escape') { event.preventDefault(); close(); return; }
-    if (event.key !== 'Tab') return;
-    const focusables = [closeButton, appButton, browserButton];
-    const index = focusables.indexOf(document.activeElement);
-    if (event.shiftKey && index === 0) { event.preventDefault(); focusables.at(-1).focus(); }
-    else if (!event.shiftKey && index === focusables.length-1) { event.preventDefault(); focusables[0].focus(); }
-  });
-  document.addEventListener('roslen:languagechange', updateText);
-  updateText();
-})();</script>
 
 <script id="roslen-crosshair-copy">
 (()=>{
