@@ -70,7 +70,7 @@ export default async function handler(request) {
           countries: rumPageloadEventsAdaptiveGroups(
             limit: 300,
             filter: { siteTag: $site, datetime_geq: $from },
-            orderBy: [sum_visits_DESC]
+            orderBy: [count_DESC]
           ) {
             dimensions { countryName }
             sum { visits }
@@ -103,7 +103,8 @@ export default async function handler(request) {
     const result = await response.json();
 
     if (!response.ok || result.errors?.length) {
-      console.error("Cloudflare GraphQL error", result.errors);
+      console.error("Cloudflare status:", response.status);
+      console.error("Cloudflare errors:", JSON.stringify(result.errors));
       return json({
         error: "Cloudflare API unavailable or query rejected"
       }, 502);
