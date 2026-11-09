@@ -432,7 +432,7 @@ async function cloudflareStats() {
         }
       }
     }
-  \`;
+   `;
 
   try {
     const response=await fetch(
