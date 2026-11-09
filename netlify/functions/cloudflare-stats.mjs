@@ -61,7 +61,7 @@ export default async function handler(request) {
         accounts(filter: { accountTag: $account }) {
           daily: rumPageloadEventsAdaptiveGroups(
             limit: 100,
-            filter: { siteTag: $site, datetime_geq: $from },
+            filter: { datetime_geq: $from },
             orderBy: [date_ASC]
           ) {
             dimensions { date }
@@ -69,7 +69,7 @@ export default async function handler(request) {
           }
           countries: rumPageloadEventsAdaptiveGroups(
             limit: 300,
-            filter: { siteTag: $site, datetime_geq: $from },
+            filter: { datetime_geq: $from },
             orderBy: [count_DESC]
           ) {
             dimensions { countryName }
