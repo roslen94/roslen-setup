@@ -183,10 +183,6 @@ function dashboardPage() {
       <h1>Vue d'ensemble</h1>
       <p>Statistiques Cloudflare · Visites et pays</p>
     </div>
-    <form method="POST">
-      <input type="hidden" name="action" value="logout">
-      <button type="submit">Déconnexion</button>
-    </form>
   </header>
 
   <section class="cards">
