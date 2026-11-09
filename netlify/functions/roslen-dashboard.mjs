@@ -496,13 +496,20 @@ async function cloudflareStats() {
   }
 }
 
-export default async function handler(request) {
-  const secret=process.env.ROSLEN_SESSION_SECRET;
-  const password=process.env.ROSLEN_DASHBOARD_PASSWORD;
 
-  if (!secret || secret.length<32 || !password || password.length<12) {
-    return reply("Configuration de session manquante",503);
+export default async function handler(request) {
+  const url = new URL(request.url);
+
+  if (request.method !== "GET") {
+    return reply("Méthode non autorisée", 405);
   }
+
+  if (url.searchParams.has("data")) {
+    return cloudflareStats();
+  }
+
+  return html(dashboardPage());
+}
 
   const url=new URL(request.url);
   const logged=validSession(request,secret);
