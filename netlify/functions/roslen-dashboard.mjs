@@ -491,3 +491,17 @@ async function cloudflareStats() {
     return json({error:"Connexion Cloudflare impossible"},502);
   }
 }
+
+export default async function handler(request) {
+  const url = new URL(request.url);
+
+  if (request.method !== "GET") {
+    return reply("Méthode non autorisée", 405);
+  }
+
+  if (url.searchParams.has("data")) {
+    return cloudflareStats();
+  }
+
+  return html(dashboardPage());
+}
