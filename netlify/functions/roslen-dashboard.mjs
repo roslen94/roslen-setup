@@ -508,8 +508,9 @@ export default async function handler(request) {
   const logged=validSession(request,secret);
 
   if (request.method==="POST") {
-    if (request.headers.get("origin")!==url.origin) {
-      return reply("Requête refusée",403);
+    const origin = request.headers.get("origin");
+    if (origin !== "https://roslen.live") {
+      return reply("Requête refusée", 403);
     }
 
     const form=await request.formData();
