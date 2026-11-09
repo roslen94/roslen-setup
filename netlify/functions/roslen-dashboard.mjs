@@ -409,7 +409,7 @@ async function cloudflareStats() {
 
   // Pas de filtre siteTag : configuration que tu as testée
   // et qui fonctionne actuellement sur ton compte.
-  const query = \`
+  const query = `
     query($account: string!, $from: Time!) {
       viewer {
         accounts(filter: { accountTag: $account }) {
